@@ -2,6 +2,7 @@ package org.oinkcraft.antimobspam.listeners;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,16 +42,19 @@ public class SpawnEggListener implements Listener {
 		        new Runnable() {
 					@Override
 					public void run() {
-						// Remove key if exists //
-						if (SpawnEggListener.spammyPlayers.containsKey(p))
-							SpawnEggListener.spammyPlayers.remove(p);
+						// Remove eggsUsed value //
+						if (SpawnEggListener.eggsUsed.containsKey(p)) 
+							SpawnEggListener.eggsUsed.remove(p);
 					}
 				},
 		        // Runs when timer is complete //
 		        new Runnable() {
 					@Override
 					public void run() {
-						
+						// Remove key if exists //
+						if (SpawnEggListener.spammyPlayers.containsKey(p))
+							SpawnEggListener.spammyPlayers.remove(p);
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.allowed").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix"))));
 					}
 				},
 		        // Runs every second of timer //
@@ -73,17 +77,24 @@ public class SpawnEggListener implements Listener {
 	
 	// Player has used egg //
 	public void onSpawnEggUsed(final PlayerInteractEvent e) {
-		// If player is in list, cancel event //
-		if (SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) 
-			e.setCancelled(true);
 		
 		// If eggs used in last 3 seconds is >= the spawn limit, start an egg ban timer on them //
 		if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && !SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
-			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspawn.spawnlimit")) {
+			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspam.spawnlimit")) {
 				createEggBanTimer(e.getPlayer());
 			}
 		}
-		
+		// If eggs used in last 3 seconds WHILE ALREADY NOT ALLOWED TO SPAM, is >= the spawn limit, remove the item from their hand
+		else if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
+			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspam.spamwhileblockedlimit")) {
+				// Remove item from inventory
+				try {
+					e.getPlayer().getInventory().removeItem(e.getItem());
+				} catch (Exception e1){ }
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.removemessage").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix"))));
+			}
+		}
+				
 		if (!eggsUsed.containsKey(e.getPlayer())) {
 			// Set 3 second timer to clear once time's up //
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -94,6 +105,12 @@ public class SpawnEggListener implements Listener {
 			eggsUsed.put(e.getPlayer(), 1);
 		} else {
 			SpawnEggListener.eggsUsed.put(e.getPlayer(), eggsUsed.get(e.getPlayer()) + 1);
+		}
+		
+		// If player is in list, cancel event //
+		if (SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
+			e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.preventionmessage").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix")).replace("%time_left%", spammyPlayers.get(e.getPlayer()).toString())));
+			e.setCancelled(true);
 		}
 		
 	}
