@@ -1,0 +1,9 @@
+antimobspam:
+   prefix: '&7[&eAMS&7]' # Prefix 
+
+   spawnlimit: 10 # Spawn limit in 3 seconds
+   spampreventiontime: 10 # Time the player is prevented from spawning eggs if they previously spammed.
+   
+   messages: # Use the placeholders: %prefix% for the prefix, and %time_left% for the time left of the spawn prevention.
+      preventionmessage: '%prefix% &cYou are not allowed to use a spawn egg for &e%time_left% &cseconds.' # Defines message sent to player if they attempt to use a spawn egg in the time when they are not allowed to.
+      
