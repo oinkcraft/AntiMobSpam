@@ -80,7 +80,7 @@ public class SpawnEggListener implements Listener {
 	public void onSpawnEggUsed(final PlayerInteractEvent e) {
 		
 		// If eggs used in last 3 seconds is >= the spawn limit, start an egg ban timer on them //
-		if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && !SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
+		if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && !SpawnEggListener.spammyPlayers.containsKey(e.getPlayer()) && !e.getPlayer().hasPermission("AMS.bypass")) {
 			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspam.spawnlimit")) {
 				createEggBanTimer(e.getPlayer());
 			}

@@ -16,7 +16,7 @@ public class DataManager {
 	String dataFolder;
 	String url;
 	
-	int range = 5;
+	int range;
 	
 	public DataManager(AntiMobSpam plugin) {
 		this.plugin = plugin;
@@ -30,6 +30,7 @@ public class DataManager {
         } catch (SQLException e) {
             Logger.logToFile("Error: Could not create table. Debugger information: "+e.getMessage());
         }
+		range = plugin.config.getConfigInt("antimobspam.scanradius");
 	}
 	
 	private Connection connect() {
