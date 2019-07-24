@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Consumer;
 import org.oinkcraft.antimobspam.AntiMobSpam;
 import org.oinkcraft.antimobspam.util.CountdownTimer;
+import org.oinkcraft.antimobspam.util.Logger;
 
 public class SpawnEggListener implements Listener {
 
@@ -111,6 +112,9 @@ public class SpawnEggListener implements Listener {
 		if (SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
 			e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.preventionmessage").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix")).replace("%time_left%", spammyPlayers.get(e.getPlayer()).toString())));
 			e.setCancelled(true);
+		} else {
+			Logger.logToFile(e.getPlayer().getName() + " has used a spawn egg at location: X: {x}, Y: {y}, Z: {z}".replace("{x}", Integer.toString(e.getPlayer().getLocation().getBlockX())).replace("{y}", Integer.toString(e.getPlayer().getLocation().getBlockY())).replace("{z}", Integer.toString(e.getPlayer().getLocation().getBlockZ())));
+			plugin.dM.addMobSpawn(e.getPlayer().getLocation().getBlockX(), e.getPlayer().getLocation().getBlockY(), e.getPlayer().getLocation().getBlockZ(), e.getPlayer().getName(), "Coming Soon", e.getPlayer().getLocation().getWorld().getName());
 		}
 		
 	}

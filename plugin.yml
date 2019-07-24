@@ -1,3 +1,10 @@
 main: org.oinkcraft.antimobspam.AntiMobSpam
-version: 1.1
+version: 1.5
 name: OinkAntiMobSpam
+commands:
+   AMSReload:
+      description: Reloads plugin configuration
+   AMSRadius:
+      description: Gets player mob spawns within a 5 block radius
+   AMSResetLog:
+      description: Wipes clean log file
