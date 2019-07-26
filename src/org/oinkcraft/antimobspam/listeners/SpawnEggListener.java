@@ -1,6 +1,8 @@
 package org.oinkcraft.antimobspam.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +20,7 @@ public class SpawnEggListener implements Listener {
 	// List of players not allowed to use 
 	public static HashMap<Player, Integer> spammyPlayers = new HashMap<Player, Integer>();
 	public static HashMap<Player, Integer> eggsUsed = new HashMap<Player, Integer>();
+	public static List<Material> eggList = new ArrayList<>();
 	
 	AntiMobSpam plugin;
 	
@@ -30,6 +33,8 @@ public class SpawnEggListener implements Listener {
 	// Check if player interacted with spawn egg, if so call 'onSpawnEggUsed'. //
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
+		if (e.getItem() == null)
+			return;
 		// Check if player used monster egg //
 		Material item = e.getItem().getType();
 		if (item.name().endsWith("_SPAWN_EGG"))
