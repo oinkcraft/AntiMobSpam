@@ -6,32 +6,33 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.oinkcraft.antimobspam.AntiMobSpam;
+import org.oinkcraft.antimobspam.util.Logger;
 
-public class CReloadConfig implements CommandExecutor {
+public class CRLogfile implements CommandExecutor {
 
 	AntiMobSpam plugin;
 	String prefix;
 	
-	public CReloadConfig(AntiMobSpam plugin) {
+	public CRLogfile(AntiMobSpam plugin) {
 		this.plugin = plugin;
-		this.prefix = plugin.config.getConfigStr("antimobspam.prefix");
+		this.prefix = plugin.config.getConfigStr("org.oinkcraft.antimobspam.prefix");
 	}
 	
 	
-	// Reload config command //
+	// Clear log command //
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = (Player) sender;
 		// Check if player has * permission //
-		if (player.hasPermission("AMS.reload")) {
-			// Reload config //
-			plugin.config.reload();
-			this.prefix = plugin.config.getConfigStr("antimobspam.prefix");
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &aConfig reloaded."));
+		if (player.hasPermission("*")) {
+			// Clear log file //
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &aLog cleared."));
+			Logger.clearLogFile();
 		} else {
 			// No permission message //
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &cInsufficient Permission."));
 		}
 		return true;
 	}
+
 }

@@ -17,7 +17,7 @@ public class CRadius implements CommandExecutor {
 	
 	public CRadius(AntiMobSpam plugin) {
 		this.plugin = plugin;
-		this.prefix = plugin.config.getConfigStr("antimobspam.prefix");
+		this.prefix = plugin.config.getConfigStr("org.oinkcraft.antimobspam.prefix");
 	}
 	
 	// Radius command //

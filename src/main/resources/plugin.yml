@@ -1,4 +1,4 @@
-main: org.oinkcraft.antimobspam.AntiMobSpam
+main: main.java.org.oinkcraft.antimobspam.AntiMobSpam
 version: 1.5
 name: OinkAntiMobSpam
 commands:

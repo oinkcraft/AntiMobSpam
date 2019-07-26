@@ -1,6 +1,8 @@
 package org.oinkcraft.antimobspam.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +20,7 @@ public class SpawnEggListener implements Listener {
 	// List of players not allowed to use 
 	public static HashMap<Player, Integer> spammyPlayers = new HashMap<Player, Integer>();
 	public static HashMap<Player, Integer> eggsUsed = new HashMap<Player, Integer>();
+	public static List<Material> eggList = new ArrayList<>();
 	
 	AntiMobSpam plugin;
 	
@@ -30,15 +33,17 @@ public class SpawnEggListener implements Listener {
 	// Check if player interacted with spawn egg, if so call 'onSpawnEggUsed'. //
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
+		if (e.getItem() == null)
+			return;
 		// Check if player used monster egg //
-		if (e.getItem().getType() == Material.MONSTER_EGG) 
+		if (e.getItem().getType().getKey().getNamespace().toLowerCase().contains("spawn_egg") )
 			onSpawnEggUsed(e);
 	}
 	
 	public void createEggBanTimer(final Player p) {
 		CountdownTimer timer = new CountdownTimer(
 				this.plugin,
-		        plugin.config.getConfigInt("antimobspam.spampreventiontime"),
+		        plugin.config.getConfigInt("org.oinkcraft.antimobspam.spampreventiontime"),
 		        // Runs before timer starts //
 		        new Runnable() {
 					@Override
@@ -55,7 +60,7 @@ public class SpawnEggListener implements Listener {
 						// Remove key if exists //
 						if (SpawnEggListener.spammyPlayers.containsKey(p))
 							SpawnEggListener.spammyPlayers.remove(p);
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.allowed").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix"))));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("org.oinkcraft.antimobspam.messages.allowed").replace("%prefix%", plugin.config.getConfigStr("org.oinkcraft.antimobspam.prefix"))));
 					}
 				},
 		        // Runs every second of timer //
@@ -81,18 +86,18 @@ public class SpawnEggListener implements Listener {
 		
 		// If eggs used in last 3 seconds is >= the spawn limit, start an egg ban timer on them //
 		if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && !SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
-			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspam.spawnlimit")) {
+			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("org.oinkcraft.antimobspam.spawnlimit")) {
 				createEggBanTimer(e.getPlayer());
 			}
 		}
 		// If eggs used in last 3 seconds WHILE ALREADY NOT ALLOWED TO SPAM, is >= the spawn limit, remove the item from their hand
 		else if (SpawnEggListener.eggsUsed.containsKey(e.getPlayer()) && SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
-			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("antimobspam.spamwhileblockedlimit")) {
+			if (SpawnEggListener.eggsUsed.get(e.getPlayer()) >= plugin.config.getConfigInt("org.oinkcraft.antimobspam.spamwhileblockedlimit")) {
 				// Remove item from inventory
 				try {
 					e.getPlayer().getInventory().removeItem(e.getItem());
 				} catch (Exception e1){ }
-				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.removemessage").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix"))));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("org.oinkcraft.antimobspam.messages.removemessage").replace("%prefix%", plugin.config.getConfigStr("org.oinkcraft.antimobspam.prefix"))));
 			}
 		}
 				
@@ -110,7 +115,7 @@ public class SpawnEggListener implements Listener {
 		
 		// If player is in list, cancel event //
 		if (SpawnEggListener.spammyPlayers.containsKey(e.getPlayer())) {
-			e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("antimobspam.messages.preventionmessage").replace("%prefix%", plugin.config.getConfigStr("antimobspam.prefix")).replace("%time_left%", spammyPlayers.get(e.getPlayer()).toString())));
+			e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.getConfigStr("org.oinkcraft.antimobspam.messages.preventionmessage").replace("%prefix%", plugin.config.getConfigStr("org.oinkcraft.antimobspam.prefix")).replace("%time_left%", spammyPlayers.get(e.getPlayer()).toString())));
 			e.setCancelled(true);
 		} else {
 			Logger.logToFile(e.getPlayer().getName() + " has used a spawn egg at location: X: {x}, Y: {y}, Z: {z}".replace("{x}", Integer.toString(e.getPlayer().getLocation().getBlockX())).replace("{y}", Integer.toString(e.getPlayer().getLocation().getBlockY())).replace("{z}", Integer.toString(e.getPlayer().getLocation().getBlockZ())));

@@ -1,5 +1,7 @@
 package org.oinkcraft.antimobspam.util;
 
+import org.oinkcraft.antimobspam.AntiMobSpam;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -8,7 +10,6 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.oinkcraft.antimobspam.AntiMobSpam;
 
 public class Logger {
 
