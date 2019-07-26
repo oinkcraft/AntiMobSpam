@@ -1,5 +1,5 @@
 main: org.oinkcraft.antimobspam.AntiMobSpam
-version: 1.8
+version: 1.8.1
 name: OinkAntiMobSpam
 api-version: 1.13
 commands:

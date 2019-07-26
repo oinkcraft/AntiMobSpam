@@ -26,8 +26,9 @@ public class CRLogfile implements CommandExecutor {
 		// Check if player has * permission //
 		if (player.hasPermission("*")) {
 			// Clear log file //
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &aLog cleared."));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &aLog and database cleared."));
 			Logger.clearLogFile();
+			plugin.dM.clearDatabase();
 		} else {
 			// No permission message //
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &cInsufficient Permission."));

@@ -1,6 +1,6 @@
 package org.oinkcraft.antimobspam.util;
 
-// Source code found from spigot thread linked here: //
+// Source code found from spigot thread linked here: //4
 // https://www.spigotmc.org/threads/creating-a-countdown.266702/ //
 
 import org.bukkit.Bukkit;

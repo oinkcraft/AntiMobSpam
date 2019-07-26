@@ -62,6 +62,17 @@ public class DataManager {
         }
 	}
 	
+	public void clearDatabase() {
+		String sql = "DELETE FROM monstereggspawns";
+		
+		try (Connection conn = DriverManager.getConnection(url)) {
+			Statement statement = conn.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            Logger.logToFile("Error: Could not clear database, Debugger information: "+e.getMessage());
+        }
+	}
+	
 	public ArrayList<Vector3> getMobSpawns(int x, int y, int z, String world) {
 		String sql = "SELECT x, y, z, player, type FROM monstereggspawns WHERE x BETWEEN "+Integer.toString(x-range)+" AND "+Integer.toString(x+range)+" AND y BETWEEN "+Integer.toString(y-range)+" AND "+Integer.toString(y+range)+" AND z BETWEEN "+Integer.toString(z-range)+" AND "+Integer.toString(z+range);
         
