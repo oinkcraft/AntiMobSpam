@@ -31,7 +31,8 @@ public class SpawnEggListener implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		// Check if player used monster egg //
-		if (e.getItem().getType() == Material.MONSTER_EGG) 
+		Material item = e.getItem().getType();
+		if (item.name().endsWith("_SPAWN_EGG"))
 			onSpawnEggUsed(e);
 	}
 	
